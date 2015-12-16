@@ -1,10 +1,12 @@
-{ pkgs, config, ... }:
-  with pkgs.lib;
+{ pkgs, config, lib, ... }:
+  with lib;
   with import <nixpkgs/nixos/modules/system/boot/systemd-unit-options.nix> {
     inherit config;
-    inherit (pkgs) lib;
+    inherit lib;
   };
 let
+  eqStrings = a: b: (a+(substring 0 0 b)) == ((substring 0 0 a)+b);
+
   services = config.systemd.services;
 
   isOneShot = cfg: hasAttr "Type" cfg.serviceConfig && cfg.serviceConfig.Type == "oneshot";

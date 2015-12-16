@@ -1,4 +1,5 @@
 { system ? builtins.currentSystem
+, lib ? (import <nixpkgs> { }).lib
 , pkgs ? import <nixpkgs> {
   inherit system;
   # Darwin needs a few packages overrides
@@ -14,7 +15,7 @@
 , name
 , configuration
 }:
-  with pkgs.lib;
+  with lib;
 
 let
   moduleList = [

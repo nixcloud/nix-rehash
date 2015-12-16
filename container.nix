@@ -1,11 +1,12 @@
 { system ? builtins.currentSystem
 , pkgs ? import <nixpkgs> { inherit system; }
+, lib ? (import <nixpkgs> { inherit system; }).lib
 , lxcExtraConfig ? ""
 , name
 , configuration
 }:
   with pkgs;
-  with pkgs.lib;
+  with lib;
 
 let
   container_root = "/var/lib/containers/${name}";

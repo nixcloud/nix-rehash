@@ -1,5 +1,5 @@
-{ config, pkgs, ... }:
-with pkgs.lib;
+{ config, pkgs, lib, ... }:
+with lib;
 let
   serviceOpts = { name, config, ...}: {
     options = {
@@ -50,7 +50,7 @@ let
     export PATH="${pkgs.coreutils}/bin"
         
     # Run start scripts first
-    "${config.userNix.startScript}"
+    ${config.userNix.startScript}
         
     # Run supervisord
     exec ${supervisor}/bin/supervisord -c "${config.supervisord.configFile}" $extraFlags "$@"

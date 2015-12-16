@@ -18,9 +18,9 @@ Having deterministic fullstack in development has never been more awesome.
   ```
   { pkgs ? import <nixpkgs> {}
   , projectName ? "myProject"
+  , lib ? (import <nixpkgs> {}).lib
   , nix-rehash ? import <nix-rehash> }:
-    with pkgs.lib;
-    with pkgs;
+    with lib;
 
   let
     services = nix-rehash.reService {
@@ -63,9 +63,10 @@ host machine. Staging or deployments have never been easier :)
 
   ```
   { pkgs ? import <nixpkgs>
+  , lib ? (import <nixpkgs> {}).lib
   , name ? "myProject"
   , nix-rehash ? import <nix-rehash> }:
-    with pkgs.lib;
+    with lib;
     with pkgs;
 
   {
@@ -80,10 +81,10 @@ host machine. Staging or deployments have never been easier :)
   }
   ```
 - do `nix-env [-f default.nix] -i myProject-container` or build with hydra and add a channel
-- start container: `sudo myProject-start-container`
+- start container: `sudo myProject-container-start`
 - ssh to container: `ssh localhost -p 25`
 - enable auto updates with cron:
   ```
   * * * * * nix-env -i myProject-container && sudo $HOME/.nix-profile/bin/myProject-update-container
   ```
-- stop container: `sudo myProject-stop-container`
+- stop container: `sudo myProject-container-stop`
