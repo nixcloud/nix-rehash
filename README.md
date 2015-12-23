@@ -88,3 +88,14 @@ host machine. Staging or deployments have never been easier :)
   * * * * * nix-env -i myProject-container && sudo $HOME/.nix-profile/bin/myProject-update-container
   ```
 - stop container: `sudo myProject-container-stop`
+
+- debuggin: just pass additional paramters to the lxc-start invocation:
+  `myProject-container-start -F `
+
+- lxc-attach -n myProject 
+  hacky way to get a console in the lxc container named myProject
+
+- check if the system kernel has all features required to run lxc containers:
+  lxc-checkconfig
+
+

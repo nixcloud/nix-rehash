@@ -38,7 +38,10 @@ let
   containerConfig = ''
     lxc.utsname = ${name}
     lxc.arch = ${if system == "x86_64-linux" then "x86_64" else "i686"}
-    lxc.tty = 6
+
+    # https://bbs.archlinux.org/viewtopic.php?id=103319
+    lxc.cgroup.devices.deny = a # Deny all access to devices
+    #lxc.tty = 6
     lxc.pts = 1024
 
     ## Capabilities
@@ -67,17 +70,30 @@ let
     lxc.cgroup.devices.allow = c 136:* rwm
     lxc.cgroup.devices.allow = c 254:0 rwm
 
+    # FIXME: a hack that it works! needs to be fixed properly (qknight)
+    # http://serverfault.com/questions/646176/lxc-container-not-starting
+    lxc.aa_allow_incomplete = 1
+
     ## Mounts
     lxc.mount.entry = /nix/store nix/store none defaults,bind.ro 0.0
     lxc.autodev = 1
 
-    ${lxcExtraConfig}
-
     ## Network
+    # see also https://wiki.archlinux.org/index.php/Linux_Containers
     lxc.network.type = veth
     lxc.network.name = eth0
     lxc.network.flags = up
+    lxc.network.link = br0
 
+    # http://unix.stackexchange.com/questions/177030/what-is-an-unprivileged-lxc-container
+    #lxc.id_map = u 0 100000 70000
+    #lxc.id_map = g 0 100000 70000
+
+    # FIXME: another hack (qknight)
+    # When using LXC with apparmor, uncomment the next line to run unconfined:
+    lxc.aa_profile = unconfined
+
+    ${lxcExtraConfig}
     '';
 
   startContainer = writeTextFile {
@@ -98,7 +114,7 @@ let
       ln -fs "${container}" $CONTAINER_ROOT/old_config
       rm $CONTAINER_ROOT/new_config
       ln -fs "${container}" $CONTAINER_ROOT/new_config
-      ${pkgs.lxc}/bin/lxc-start -n "${name}" \
+      ${pkgs.lxc}/bin/lxc-start -d -n "${name}" \
         -f "${pkgs.writeText "container.conf" containerConfig}" \
         -s lxc.rootfs=$CONTAINER_ROOT \
         "$@" "${container}/init"
