@@ -98,4 +98,15 @@ host machine. Staging or deployments have never been easier :)
 - check if the system kernel has all features required to run lxc containers:
   lxc-checkconfig
 
+- if stuff isn't working try: 
+    bash
+  or 
+    source /etc/profile
 
+
+http://unix.stackexchange.com/questions/170998/how-to-create-user-cgroups-with-systemd
+
+TODO unpriviliged containers:  
+- not working (systemd) https://www.flockport.com/lxc-and-lxd-support-across-distributions/
+- some stuff workes better with cgmanager enabled
+- https://wiki.archlinux.org/index.php/Linux_Containers#Systemd_considerations_.28required.29

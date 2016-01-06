@@ -41,7 +41,7 @@ let
 
     # https://bbs.archlinux.org/viewtopic.php?id=103319
     lxc.cgroup.devices.deny = a # Deny all access to devices
-    #lxc.tty = 6
+    lxc.tty = 4
     lxc.pts = 1024
 
     ## Capabilities
@@ -54,21 +54,27 @@ let
     # Allow to mknod all devices (but not using them)
     lxc.cgroup.devices.allow = c *:* m
     lxc.cgroup.devices.allow = b *:* m
-
+    # /dev/null
     lxc.cgroup.devices.allow = c 1:3 rwm
     lxc.cgroup.devices.allow = c 1:5 rwm
-    lxc.cgroup.devices.allow = c 1:8 rwm
-    lxc.cgroup.devices.allow = c 1:9 rwm
+    #consoles / tty
     lxc.cgroup.devices.allow = c 4:0 rwm
     lxc.cgroup.devices.allow = c 4:1 rwm
-    lxc.cgroup.devices.allow = c 4:2 rwm
-    lxc.cgroup.devices.allow = c 4:3 rwm
+    #lxc.cgroup.devices.allow = c 4:2 rwm
+    #lxc.cgroup.devices.allow = c 4:3 rwm
     lxc.cgroup.devices.allow = c 5:0 rwm
     lxc.cgroup.devices.allow = c 5:1 rwm
+    # /dev/random
+    lxc.cgroup.devices.allow = c 1:8 rwm 
+    lxc.cgroup.devices.allow = c 1:9 rwm
+    # /dev/pts/*
     lxc.cgroup.devices.allow = c 5:2 rwm
-    lxc.cgroup.devices.allow = c 10:229 rwm
     lxc.cgroup.devices.allow = c 136:* rwm
+    #rtc
     lxc.cgroup.devices.allow = c 254:0 rwm
+    # /dev/fuse
+    lxc.cgroup.devices.allow = c 10:229 rwm
+
 
     # FIXME: a hack that it works! needs to be fixed properly (qknight)
     # http://serverfault.com/questions/646176/lxc-container-not-starting
@@ -80,14 +86,23 @@ let
 
     ## Network
     # see also https://wiki.archlinux.org/index.php/Linux_Containers
-    lxc.network.type = veth
-    lxc.network.name = eth0
-    lxc.network.flags = up
-    lxc.network.link = br0
+#    lxc.network.type = veth
+#    lxc.network.name = eth0
+#    lxc.network.flags = up
+#    lxc.network.link = br0
+#    lxc.network.name = eth0
+#    lxc.network.mtu = 1500
+#    lxc.network.ipv4 = 192.168.10.0/24
 
     # http://unix.stackexchange.com/questions/177030/what-is-an-unprivileged-lxc-container
-    #lxc.id_map = u 0 100000 70000
-    #lxc.id_map = g 0 100000 70000
+
+    # https://linuxcontainers.org/lxc/getting-started/
+    #Do:  usermod --add-subuids 100000-165536 $USER
+    #And: usermod --add-subgids 100000-165536 $USER
+    #give USER access to /var/lib/containers/
+    lxc.id_map = u 0 100000 65536
+    lxc.id_map = g 0 100000 65536
+
 
     # FIXME: another hack (qknight)
     # When using LXC with apparmor, uncomment the next line to run unconfined:
