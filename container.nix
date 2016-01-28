@@ -87,10 +87,10 @@ let
     ## Network
     # see also https://wiki.archlinux.org/index.php/Linux_Containers
     lxc.network.type = veth
-    lxc.network.name = eth1
+    lxc.network.name = eth0
     lxc.network.flags = up
 
-    lxc.network.ipv4 = 10.10.0.0/16
+   # lxc.network.ipv4 = 10.10.0.0/16
 
     lxc.network.link = br0
     lxc.network.mtu = 1500
