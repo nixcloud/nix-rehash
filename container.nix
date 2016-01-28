@@ -40,8 +40,8 @@ let
     lxc.arch = ${if system == "x86_64-linux" then "x86_64" else "i686"}
 
     # https://bbs.archlinux.org/viewtopic.php?id=103319
-    lxc.cgroup.devices.deny = a # Deny all access to devices
-    lxc.tty = 4
+#    lxc.tty = 6
+    lxc.tty = 0
     lxc.pts = 1024
 
     ## Capabilities
@@ -58,12 +58,12 @@ let
     lxc.cgroup.devices.allow = c 1:3 rwm
     lxc.cgroup.devices.allow = c 1:5 rwm
     #consoles / tty
-    lxc.cgroup.devices.allow = c 4:0 rwm
-    lxc.cgroup.devices.allow = c 4:1 rwm
-    #lxc.cgroup.devices.allow = c 4:2 rwm
-    #lxc.cgroup.devices.allow = c 4:3 rwm
-    lxc.cgroup.devices.allow = c 5:0 rwm
-    lxc.cgroup.devices.allow = c 5:1 rwm
+#    lxc.cgroup.devices.allow = c 4:0 rwm
+#    lxc.cgroup.devices.allow = c 4:1 rwm
+#    lxc.cgroup.devices.allow = c 4:2 rwm
+#    lxc.cgroup.devices.allow = c 4:3 rwm
+#    lxc.cgroup.devices.allow = c 5:0 rwm
+#    lxc.cgroup.devices.allow = c 5:1 rwm
     # /dev/random
     lxc.cgroup.devices.allow = c 1:8 rwm 
     lxc.cgroup.devices.allow = c 1:9 rwm
@@ -86,13 +86,14 @@ let
 
     ## Network
     # see also https://wiki.archlinux.org/index.php/Linux_Containers
-#    lxc.network.type = veth
-#    lxc.network.name = eth0
-#    lxc.network.flags = up
-#    lxc.network.link = br0
-#    lxc.network.name = eth0
-#    lxc.network.mtu = 1500
-#    lxc.network.ipv4 = 192.168.10.0/24
+    lxc.network.type = veth
+    lxc.network.name = eth1
+    lxc.network.flags = up
+
+    lxc.network.ipv4 = 10.10.0.0/16
+
+    lxc.network.link = br0
+    lxc.network.mtu = 1500
 
     # http://unix.stackexchange.com/questions/177030/what-is-an-unprivileged-lxc-container
 
@@ -100,8 +101,8 @@ let
     #Do:  usermod --add-subuids 100000-165536 $USER
     #And: usermod --add-subgids 100000-165536 $USER
     #give USER access to /var/lib/containers/
-    lxc.id_map = u 0 100000 65536
-    lxc.id_map = g 0 100000 65536
+    # lxc.id_map = u 0 100000 65536
+    # lxc.id_map = g 0 100000 65536
 
 
     # FIXME: another hack (qknight)
